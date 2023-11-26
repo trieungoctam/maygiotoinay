@@ -3,7 +3,12 @@ import config from "@config/config.json";
 import menu from "@config/menu.json";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import social from "@config/social.json";
+import { markdownify } from "@lib/utils/textConverter";
+import Image from "next/image";
+import Social from "@components/Social";
+import { set } from "date-fns";
 
 const Header = () => {
   //router
@@ -19,8 +24,55 @@ const Header = () => {
   const { logo } = config.site;
   const { enable, label, link } = config.nav_button;
 
+  const [clientWindowHeight, setClientWindowHeight] = useState("");
+
+  const [backgroundTransparacy, setBackgroundTransparacy] = useState(0);
+  const [padding, setPadding] = useState(30);
+  const [boxShadow, setBoxShadow] = useState(0);
+  const [backgroundColor, setBackgroundColor] = useState(255);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  });
+
+  const handleScroll = () => {
+    setClientWindowHeight(window.scrollY);
+  };
+
+  useEffect(() => {
+    let backgroundTransparacyVar = clientWindowHeight / 600;
+
+    if (backgroundTransparacyVar < 1) {
+      let paddingVar = 30 - backgroundTransparacyVar * 20;
+      let boxShadowVar = backgroundTransparacyVar * 0.1;
+      setBackgroundTransparacy(backgroundTransparacyVar);
+      setPadding(paddingVar);
+      setBoxShadow(boxShadowVar);
+      setBackgroundColor(200);
+    }
+  }, [clientWindowHeight]);
+
+  useEffect(() => {
+    let backgroundTransparacyVar = clientWindowHeight / 600;
+
+    if (backgroundTransparacyVar < 1) {
+      setBackgroundColor(210);
+    }
+  });
+
   return (
-    <header className="header">
+    <header
+      className="header fixed left-0 right-0 top-0"
+      style={{
+        background: `rgba(${backgroundColor}, ${backgroundColor}, ${backgroundColor}, ${backgroundTransparacy})`,
+        padding: `${padding}px 0px`,
+        boxShadow: `rgb(0 0 0 / ${boxShadow}) 0px 0px 20px 6px`,
+        borderRadius: "0 0 8px 8px",
+        zIndex: 100000,
+        height: "80px",
+      }}
+    >
       <nav className="navbar container">
         {/* logo */}
         <div className="order-0">
@@ -30,7 +82,7 @@ const Header = () => {
         {/* navbar toggler */}
         <button
           id="show-button"
-          className="order-2 flex cursor-pointer items-center md:hidden md:order-1"
+          className="order-2 flex cursor-pointer items-center md:order-1 md:hidden"
           onClick={() => setNavOpen(!navOpen)}
         >
           {navOpen ? (
@@ -108,13 +160,11 @@ const Header = () => {
             )}
           </ul>
         </div>
-        {enable && (
-          <div className="d-flex order-1 ml-auto hidden min-w-[200px] items-center justify-end md:ml-0 md:flex md:order-2">
-            <Link className="btn btn-primary z-0 py-[14px]" href={link} rel="">
-              {label}
-            </Link>
-          </div>
-        )}
+
+        {/* social links */}
+        <div className="social-links block hidden md:order-2 md:flex md:items-center md:justify-center">
+          <Social source={social} className="social-icons block" />
+        </div>
       </nav>
     </header>
   );

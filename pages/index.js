@@ -16,7 +16,7 @@ const Home = ({ frontmatter }) => {
   return (
     <Base title={title}>
       {/* Banner */}
-      <section className="section pb-[50px]">
+      <section className="section pb-[50px] my-[30px]">
         <div className="container">
           <div className="row text-center">
             <div className="mx-auto lg:col-10">
@@ -44,7 +44,7 @@ const Home = ({ frontmatter }) => {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Features
       <section className="section bg-theme-light">
         <div className="container">
           <div className="text-center">
@@ -73,7 +73,7 @@ const Home = ({ frontmatter }) => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* services */}
       {services.map((service, index) => {
