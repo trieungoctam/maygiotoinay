@@ -53,6 +53,11 @@ const App = ({ Component, pageProps }) => {
           content="width=device-width, initial-scale=1, maximum-scale=5"
         />
       </Head>
+      <div
+        style={{width: '100vw', height: '80px'}}
+      >
+      
+      </div>
       <Component {...pageProps} />
     </>
   );
